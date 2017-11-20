@@ -1,5 +1,6 @@
 package retriever;
 
+import retriever.enums.SupplementalColumns;
 import retriever.retrievers.*;
 
 import java.util.HashMap;

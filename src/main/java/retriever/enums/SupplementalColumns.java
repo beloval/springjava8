@@ -1,4 +1,4 @@
-package retriever.retrievers;
+package retriever.enums;
 
 
 public enum SupplementalColumns {

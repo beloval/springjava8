@@ -4,7 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import retriever.IValueRetriever;
 import retriever.IValueRetrieverStatic;
-import retriever.retrievers.SupplementalColumns;
+import retriever.enums.DescriptionType;
+import retriever.enums.SupplementalColumns;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +62,8 @@ public class Example {
 
     @RequestMapping("/")
     String home() {
-        return "Hello World!";
+
+        return DescriptionType.LONG_DESCRIPTION.getTextLineType();
     }
 
 
