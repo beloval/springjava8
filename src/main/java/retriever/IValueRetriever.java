@@ -6,4 +6,8 @@ package retriever;
 public interface IValueRetriever {
 
     String getValue(String product, String contract, String merchant, Integer constantValue);
+
+    default String fromChapter() {
+        return "Two";
+    }
 }

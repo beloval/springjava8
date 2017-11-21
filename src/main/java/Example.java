@@ -1,3 +1,4 @@
+import innerclasses.OuterDemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.LongToDoubleFunction;
 
 @RestController
 @EnableAutoConfiguration
@@ -36,7 +40,35 @@ public class Example {
         for (Integer intValue : mapped) {
             System.out.println(intValue); //refactor it with java 8 lambdas
         }
+        //case to interface pattern with inner class and lambda
         casePatternWithInterface();
+
+        OuterDemo outerDemo = new OuterDemo();
+        outerDemo.displayFromInner();
+        //access to inner public class
+        OuterDemo.InnerDemoPublic innerDemoPublic = outerDemo.new InnerDemoPublic();
+        innerDemoPublic.printTest();
+       System.out.println(innerDemoPublic.getPrivateNumber());
+        //with anonymous inner classes
+        OuterDemo outer = new OuterDemo(){
+            public void displayFromInner() {
+                System.out.print("now overwrite method to display from private inner with anonymous class");
+            }
+        };
+        Mapper<Integer, Integer> square = (Integer value, Integer test) -> value * value;
+        System.out.print(square.map(10,10));
+        outer.displayFromInner();
+  longToDoubleWithUtilFunction();
+    }
+
+    private static void longToDoubleWithUtilFunction() {
+        LongToDoubleFunction i = value -> value;
+       System.out.println(i.applyAsDouble(1000));
+        Consumer<String> print = System.out::print;
+        print.accept("My string 1");
+        Function<Integer, String> toStr = (value) -> (value + "!");
+       // List<String> string = map(integers, toStr);
+
     }
 
     public static <V, M> List<M> map(List<V> list, M num, Mapper<V, M> mapper) {
