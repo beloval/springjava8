@@ -7,7 +7,14 @@ import retriever.IValueRetriever;
 import retriever.IValueRetrieverStatic;
 import retriever.enums.DescriptionType;
 import retriever.enums.SupplementalColumns;
+import rx.Observable;
+import rx.functions.Action1;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,10 +63,32 @@ public class Example {
             }
         };
         Mapper<Integer, Integer> square = (Integer value, Integer test) -> value * value;
-        System.out.print(square.map(10,10));
+
+        System.out.print(square.map(10,10));//assign to lambda to variable
+
         outer.displayFromInner();
-  longToDoubleWithUtilFunction();
+      longToDoubleWithUtilFunction();
+        firstActionExample();
+
+        System.out.println(greet("Hello").apply("world")); //function return function
+
+        workingWithDirectory();
+
+
     }
+
+    private static void workingWithDirectory() {
+        Path resources = Paths.get("src", "main", "java");
+        try (DirectoryStream<Path> dStream
+                     = Files.newDirectoryStream(resources)) {
+            Observable<Path> dirObservable = Observable.from(dStream);
+            dirObservable.subscribe(System.out::println);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private static void longToDoubleWithUtilFunction() {
         LongToDoubleFunction i = value -> value;
@@ -98,5 +127,18 @@ public class Example {
         return DescriptionType.LONG_DESCRIPTION.getTextLineType();
     }
 
-
+    private static void firstActionExample() {
+        List<String> list = Arrays.asList("One", "Two", "Three", "Four",
+                "Five"); // (1)
+        Observable<String> observable = Observable.from(list); // (2)
+        observable.subscribe(new Action1<String>() { // (3)
+            @Override
+            public void call(String element) {
+                System.out.println(element); // Prints the element (4)
+            }
+        });
+    }
+    public static Function<String, String> greet(String greeting) {
+        return (String name) -> greeting + " " + name + "!";
+    }
 }
