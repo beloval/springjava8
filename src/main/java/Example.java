@@ -1,3 +1,4 @@
+import hepler.SystemUser;
 import innerclasses.OuterDemo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -8,17 +9,18 @@ import retriever.IValueRetrieverStatic;
 import retriever.enums.DescriptionType;
 import retriever.enums.SupplementalColumns;
 import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.LongToDoubleFunction;
@@ -74,8 +76,22 @@ public class Example {
 
         workingWithDirectory();
 
+        workingWithJustObservable();
+
+        workingWithOtherObservableMethods();
+
+        unsubscribingWorks();
 
     }
+
+    private static void workingWithJustObservable() {
+    Observable
+            .just(new SystemUser("Aleks", "Belov"))
+            .map(u -> u.getFullname() + " " + u.getName())
+            .subscribe(System.out::println);
+
+    }
+
 
     private static void workingWithDirectory() {
         Path resources = Paths.get("src", "main", "java");
@@ -141,4 +157,85 @@ public class Example {
     public static Function<String, String> greet(String greeting) {
         return (String name) -> greeting + " " + name + "!";
     }
+
+    private static <T>  Subscription  subscribePrint(Observable<T> observable, String name) {
+        return observable.subscribe(
+                (v) -> System.out.println(name + " : " + v),
+                (e) -> {
+                    System.err.println("Error from " + name + ":");
+                    System.err.println(e.getMessage());
+                },
+                () -> System.out.println(name + " ended!")
+        );
+    }
+    private static void workingWithOtherObservableMethods() {
+        try {
+        subscribePrint(
+                Observable.interval(500L, TimeUnit.MILLISECONDS),
+                "Interval Observable"
+        );
+        subscribePrint(
+                Observable.timer(20L, 10L, TimeUnit.SECONDS),
+                "Timed Interval Observable"
+        );
+        subscribePrint(
+                Observable.timer(1L, TimeUnit.SECONDS),
+                "Timer Observable"
+        );
+        subscribePrint(
+                Observable.error(new Exception("Test Error!")),
+                "Error Observable"
+        );
+        subscribePrint(Observable.empty(), "Empty Observable");
+        subscribePrint(Observable.never(), "Never Observable");
+        subscribePrint(Observable.range(1, 3), "Range Observable");
+
+            Thread.sleep(2000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void unsubscribingWorks() throws IOException {
+        Path path = Paths.get("src", "main", "resources",
+                "test.txt"); // (1)
+        List<String> data = Files.readAllLines(path);
+        Observable<String> observable =
+                fromIterable(data).subscribeOn(Schedulers.computation()); // (2)
+        Subscription subscription = subscribePrint(observable, "File");// (3)
+        System.out.println("Before unsubscribe!");
+        System.out.println("-------------------");
+        subscription.unsubscribe(); // (4)
+        System.out.println("-------------------");
+        System.out.println("After unsubscribe!");
+    }
+
+    private static  <T> Observable<T> fromIterable(final Iterable<T> iterable) {
+            return Observable.create(new Observable.OnSubscribe<T>() {
+                @Override
+                public void call(Subscriber<? super T> subscriber) {
+                    try {
+                        Iterator<T> iterator = iterable.iterator();
+                        while (iterator.hasNext()) {
+                            if (subscriber.isUnsubscribed()) {
+                                return;
+                            }
+                            subscriber.onNext(iterator.next());
+                        }
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onCompleted();
+                        }
+                    }
+                    catch (Exception e) {
+                        if (!subscriber.isUnsubscribed()) {
+                            subscriber.onError(e);
+                        }
+                    }
+                }
+            });
+        }
+
 }
+
+

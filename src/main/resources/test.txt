@@ -1,0 +1,299 @@
+[ 1 ]
+Learning Reactive
+Programming with Java 8
+Learn how to use RxJava and its reactive Observables
+to build fast, concurrent, and powerful applications
+through detailed examples
+Nickolay Tsvetinov
+BIRMINGHAM - MUMBAI
+Learning Reactive Programming with Java 8
+Copyright © 2015 Packt Publishing
+All rights reserved. No part of this book may be reproduced, stored in a retrieval
+system, or transmitted in any form or by any means, without the prior written
+permission of the publisher, except in the case of brief quotations embedded in
+critical articles or reviews.
+Every effort has been made in the preparation of this book to ensure the accuracy
+of the information presented. However, the information contained in this book is
+sold without warranty, either express or implied. Neither the author, nor Packt
+Publishing, and its dealers and distributors will be held liable for any damages
+caused or alleged to be caused directly or indirectly by this book.
+Packt Publishing has endeavored to provide trademark information about all of the
+companies and products mentioned in this book by the appropriate use of capitals.
+However, Packt Publishing cannot guarantee the accuracy of this information.
+First published: June 2015
+Production reference: 1170615
+Published by Packt Publishing Ltd.
+Livery Place
+35 Livery Street
+Birmingham B3 2PB, UK.
+ISBN 978-1-78528-872-2
+www.packtpub.com
+Credits
+Author
+Nickolay Tsvetinov
+Reviewers
+Samuel Gruetter
+Dávid Karnok
+Timo Tuominen
+Shixiong Zhu
+Commissioning Editor
+Veena Pagare
+Acquisition Editor
+Larrisa Pinto
+Content Development Editor
+Adrian Raposo
+Technical Editor
+Abhishek R. Kotian
+Copy Editors
+Brandt D'mello
+Neha Vyas
+Project Coordinator
+Sanchita Mandal
+Proofreader
+Safis Editing
+Indexer
+Mariammal Chettiyar
+Production Coordinator
+Conidon Miranda
+Cover Work
+Conidon Miranda
+About the Author
+Nickolay Tsvetinov is a professional all-round web developer at
+TransportAPI—Britain's first comprehensive open platform for transport
+solutions. During his career as a software developer, he experienced both good
+and bad and played with most of the popular programming languages—from
+C and Java to Ruby and JavaScript. For the last 3-4 years, he's been creating and
+maintaining single-page applications (SPA) and the backend API architectures that
+serve them. He is a fan of open source software, Rails, Vim, Sinatra, Ember.js, Node.
+js, and Nintendo. He was an unsuccessful musician and poet, but he is a successful
+husband and father. His area of interest and expertise includes the declarative/
+functional and reactive programming that resulted in the creation of ProAct.js
+(http://proactjs.com), which is a library that augments the JavaScript language
+and turns it into a reactive language.
+First of all, I want to thank my wife, Tanya. I wrote this book because
+she told me that I was capable of doing this. She was with me all these
+months; I worked late at night and on weekends, but she didn't mind
+that. She also helped me with the content of this book. Thank you,
+Tanya; I love you and I dedicate this book to you. I want to thank
+my baby girl, Dalia. She is the one who makes me learn and do new
+things. One day, I want her to be proud of me—she is my sun. I want
+to thank my colleagues from TransportAPI, especially Dave, who
+helped me with my English, and Jonathan and Martin, who gave me
+the courage to finish the book.
+I want to thank Astea Solutions, as they gave me space to write, as
+well as my parents, Georgi and Dimana, who did the same for me
+on weekends. Finally, I want to thank all my friends who supported
+me—Simeon, Rosen, Deyan, Pavel, my sister, Marina, and many more.
+Thank you!
+About the Reviewers
+Samuel Gruetter holds a BSc degree in computer science from École Polytechnique
+Fédérale de Lausanne (EPFL), Switzerland. As a student assistant and member of the
+Scala team at EPFL, he developed RxScala, which is a Scala adaptor for the RxJava
+Reactive Extensions library. In this way, he contributed to RxJava. He was also a
+teaching assistant for the Principles of Reactive Programming massive open online course
+on Coursera, which is the first online course on reactive programming.
+Dávid Karnok is a research assistant and PhD student at the Research Laboratory
+on Engineering and Management Intelligence of the Institute for Computer Science
+and Control of the Hungarian Academy of Sciences.
+He has been working with Java and related core technologies since 2005 to bring
+Java's benefits to manufacturing and logistic companies.
+He was the first to port Microsoft's Rx.NET framework to Java back in 2010;
+however, the concept was so ahead of its time that his library didn't catch much
+attention until Netflix came out with the independent RxJava port in 2013. He joined
+the project not much later and is a core collaborator and has contributed to about
+30 percent of the code in the library over the years. With several years of reactive
+programming experience and as a core developer of RxJava, he frequently answers
+questions about the library on Stack Overflow, where he reviews pull requests on
+the RxJava GitHub project page and posts bug fixes and enhancements on a regular
+basis.
+Timo Tuominen develops large-scale software projects from conception to
+completion for clients, including major telcos and device manufacturers. As the
+technical lead, he has created dozens of products and services both for consumer
+and business use.
+Working with Futurice, he started using RxJava in 2013 and designed one of the
+first pure RxJava architectures on Android. His novel approach was a result of the
+uncompromising functional reactive programming principles that he applied to
+an existing platform. Several apps and thousands of code commits later, he is now
+convinced that RxJava and FRP represent a new and better way to build software.
+I would like to dedicate this book to everyone who has put up with
+my RxJava innovations.
+Shixiong Zhu is an RxJava committer and also maintains the RxScala project. He
+received his master's of science degree in computer science from Peking University,
+China. After that, he joined MicroStrategy and worked on several big data projects.
+He has also worked on the infrastructure team at Xiaomi. Currently, he is living
+in Beijing and working on the Apache Spark project, which is a fast and general
+platform for large-scale data processing.
+www.PacktPub.com
+Support files, eBooks, discount offers,
+and more
+For support files and downloads related to your book, please visit www.PacktPub.com.
+Did you know that Packt offers eBook versions of every book published, with PDF and ePub
+files available? You can upgrade to the eBook version at www.PacktPub.com and as a print
+book customer, you are entitled to a discount on the eBook copy. Get in touch with us at
+service@packtpub.com for more details.
+At www.PacktPub.com, you can also read a collection of free technical articles, sign up for
+a range of free newsletters and receive exclusive discounts and offers on Packt books and
+eBooks.
+TM
+https://www2.packtpub.com/books/subscription/packtlib
+Do you need instant solutions to your IT questions? PacktLib is Packt's online digital book
+library. Here, you can search, access, and read Packt's entire library of books.
+Why subscribe?
+• Fully searchable across every book published by Packt
+• Copy and paste, print, and bookmark content
+• On demand and accessible via a web browser
+Free access for Packt account holders
+If you have an account with Packt at www.PacktPub.com, you can use this to access
+PacktLib today and view 9 entirely free books. Simply use your login credentials for
+immediate access.
+
+[ i ]
+Table of Contents
+Preface v
+Chapter 1: An Introduction to Reactive Programming 1
+What is reactive programming? 2
+Why should we be reactive? 3
+Introducing RxJava 5
+Downloading and setting up RxJava 5
+Comparing the iterator pattern and the RxJava Observable 6
+Implementing the reactive sum 10
+Summary 16
+Chapter 2: Using the Functional Constructions of Java 8 17
+Lambdas in Java 8 18
+Introducing the new syntax and semantics 18
+Functional interfaces in Java 8 and RxJava 22
+Implementing the reactive sum example with lambdas 24
+Pure functions and higher order functions 26
+Pure functions 26
+Higher order functions 28
+RxJava and functional programming 30
+Summary 30
+Chapter 3: Creating and Connecting Observables,
+Observers, and Subjects 31
+The Observable.from method 32
+The Observable.just method 33
+Other Observable factory methods 35
+The Observable.create method 37
+Subscribing and unsubscribing 39
+Table of Contents
+[ ii ]
+Hot and cold Observable instances 43
+The ConnectableObservable class 44
+The Subject instances 46
+Summary 50
+Chapter 4: Transforming, Filtering, and Accumulating
+Your Data 51
+Observable transformations 51
+Transformations with the various flatMap operators 53
+Grouping items 61
+Additional useful transformation operators 64
+Filtering data 65
+Accumulating data 71
+Summary 74
+Chapter 5: Combinators, Conditionals, and Error Handling 75
+Combining the Observable instances 76
+The zip operator 76
+The combineLatest operator 78
+The merge operator 80
+The concat operator 81
+The conditional operators 83
+The amb operator 83
+The takeUntil(), takeWhile(), skipUntil(), and skipWhile()
+conditional operators 84
+The defaultIfEmpty( ) operator 86
+Handling errors 86
+The return and resume operators 87
+The retrying technique 88
+An HTTP client example 91
+Summary 95
+Chapter 6: Using Concurrency and Parallelism with Schedulers 97
+RxJava's schedulers 98
+Debugging Observables and their schedulers 98
+The interval Observable and its default scheduler 101
+Types of schedulers 102
+The Schedulers.immediate scheduler 105
+The Schedulers.trampoline scheduler 106
+The Schedulers.newThread scheduler 107
+The Schedulers.computation scheduler 108
+The Schedulers.io scheduler 110
+The Schedulers.from(Executor) method 111
+Table of Contents
+[ iii ]
+Combining Observables and schedulers 111
+The Observable<T> subscribeOn(Scheduler) method 112
+The Observable<T> observeOn(Scheduler) operator 114
+Parallelism 117
+Buffering, throttling, and debouncing 120
+Throttling 121
+Debouncing 122
+The buffer and window operators 123
+The backpressure operators 125
+Summary 126
+Chapter 7: Testing Your RxJava Application 127
+Testing using simple subscription 128
+The BlockingObservable class 130
+The aggregate operators and the BlockingObservable class 132
+Testing with the aggregate operators and the
+BlockingObservable class 134
+Using the TestSubscriber class for
+in-depth testing 135
+Testing asynchronous Observable instances with the help
+of the TestScheduler class 136
+Summary 139
+Chapter 8: Resource Management and Extending RxJava 141
+Resource management 142
+Introducing the Observable.using method 142
+Caching data with Observable.cache 146
+Creating custom operators with lift 148
+Composing multiple operators with the Observable.compose
+operator 151
+Summary 153
+Index 155
+
+[ v ]
+Preface
+Reactive programming has been around for decades. There has been a few
+implementations of reactive programming from the time Smalltalk was a young
+language. However, it has only become popular recently and it is now becoming a
+trend. Why now you ask? Because it is good for writing fast, real-time applications
+and current technologies and the Web demand this.
+I got involved in it back in 2008, when the team I was part of was developing a
+multimedia book creator called Sophie 2. It had to be fast and responsive so we
+created a framework called Prolib, which provided objects with properties which
+could depend on each other (in other words, we implemented bindings for Swing
+and much more—transformations, filtering, and so on). It felt natural to wire the
+model data to the GUI like this.
+Of course, this was far away from the functional-like approach that comes with RX.
+In 2010, Microsoft released RX and, after that, Netflix ported it to Java—RxJava.
+However, Netflix released RxJava to the open source community and the project
+became a huge success. Many other languages have their port of RX and many
+alternatives to it. Now, you can code using reactive programming on your Java
+backend and wire it to your RxJava's frontend.
+This book tries to explain to you what reactive programming is all about and how
+to use it with RxJava. It has many small examples and it explains concepts and API
+details in small steps. After reading this book, you will have an idea of RxJava,
+functional programming, and the reactive paradigm.
+Preface
+[ vi ]
+What this book covers
+Chapter 1, An Introduction to Reactive Programming, will introduce you to the concept
+of reactive programming and will tell you why you should learn about it. This
+chapter contains examples that demonstrate how RxJava incorporates the reactive
+programming concept.
+Chapter 2, Using the Functional Constructions of Java 8, will teach you how to use the
+new lambda constructions of Java 8. It will explain some functional programming
+concepts and will show you how to use them with RxJava in your reactive programs.
+Chapter 3, Creating and Connecting Observables, Observers, and Subjects, will show you
+the basic building blocks of the RxJava library called the Observables. You will learn
+the difference between 'hot' and 'cold' Observables and how to subscribe to and
+unsubscribe from them using a subscription instance.
+Chapter 4, Transforming, Filtering, and Accumulating Your Data, will walk you
+through the basic reactive operators, which you will learn how to use to achieve
+step-by-step computations. This chapter will give you an idea of how to transform
+the events the Observables emit, how to filter only the data we need, and how to
+group, accumulate, and process it.
+Chapter 5, Combinators, Conditionals, and Error Handling, will present you with more
+complex reactive operators, which will allow you to master observable chaining. You
+will learn about the combining and conditional operators and how the Observables
+interact with each other. This chapter demonstrates the different approaches to error
+handling.
